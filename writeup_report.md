@@ -69,12 +69,59 @@ First I am doing normalization and cropping of images.
 
 The final model architecture (model.py lines 106-130) consisted of four stacked convolutional layers with RELU activation and followed by max-pooling after that I have used 3 dense layers with dropout before predicting output
 
+| Layer | Output Shape | Param # | Stride |
+|---|---:|---:|:---:|
+| Input  | 160, 320, 3 | 0 | -  |
+| Normalization | 160, 320, 3  | 0 |-  |
+| Cropping |  65, 320, 3 | 0 | -  |
+| Convolution 5x5 | 61, 316, 8  | 608 | (2,2) |
+| MaxPooling | 30, 158, 8  | 0  |-  |
+| Convolution 5x5 | 26, 154, 32  | 6432 | (2,2) |
+| MaxPooling | 13, 77, 32  | 0  |-  |
+| Convolution 3x3 | 11, 75, 64  | 18496 | (2,2) |
+| MaxPooling | 5, 37, 64  | 0  |-  |
+| Convolution 3x3 | 3, 35, 128 | 73856 | (2,2)  |
+| MaxPooling  | 1, 17, 128 | 0  |-  |
+| Flatten | 2176 | 0 |-  |
+| Dense  | 512 | 1114624  |-  |
+| Dropout  | 512   | 0  |-  |
+| Dense  | 128 | 65664  |-  |
+| Dense  | 64 | 8256  |-  |
+| Dense  | 1 | 65  |-  |
+
+Total params: 1,288,001
 
 #### 3. Creation of the Training Set & Training Process
 
 To capture good driving behaviour, I first recorded four laps on track one using centre lane driving. But since I am not a good driver, I got lots of data point where the car has to recover from edges and has to make sharp turns. I kept on collecting more data so that model can learn both normal and recovery behaviour.
 
 After the collection process, I did the preprocessing by normalizing and cropping only the important part of the images.
+
+I have used left, center and right camera images with steering correction:
+
+
+**Steering: 0.54**
+
+![](examples/center.jpg)
+
+**Steering: 0.54+0.2**
+
+![](examples/left.jpg)
+
+
+**Steering: 0.54-0.2**
+
+![](examples/right.jpg)
+
+After that I flipped the images and changing the sign of steering direction, to get more robust data.
+
+**Steering: 0.34**
+
+![](examples/right.jpg)
+
+**Steering: -0.34**
+
+![](examples/flip.jpg)
 
 I finally randomly shuffled the dataset and put 20% of the data into a validation set. 
 
